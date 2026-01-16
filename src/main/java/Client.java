@@ -11,8 +11,8 @@ import com.google.gson.JsonParser;
 public class Client {
 
     public static void main(String[] args) {
-        final String HOST = "127.0.0.1";
-        final int PORT = 5003;
+        final String HOST = "127.0.0.1"; // IP del server a cui mandare
+        final int PORT = 5003; // porta del server
 
         System.out.println("[CLIENT] Connessione a " + HOST + ":" + PORT + "...");
 
@@ -20,18 +20,18 @@ public class Client {
              BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
              PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8), true)) {
 
-            // Costruisce JSON (formato richiesto)
+            // costruzione JSON da mandare
             JsonObject request = new JsonObject();
             request.addProperty("nome", "client"); // 'client' essendo il client
             request.addProperty("cognome", "Bisognin"); // cognome studente
             request.addProperty("data", LocalDate.now().toString()); // data odierna
             request.addProperty("numero", 2); // numero nel registro
 
-            // Invia 1 riga = 1 JSON
+            // invia 1 riga = 1 JSON
             out.println(request.toString());
             System.out.println("[CLIENT] JSON inviato: " + request);
 
-            // Legge risposta (1 riga = 1 JSON)
+            // lettura risposta del server
             String responseLine = in.readLine();
             if (responseLine == null) {
                 System.out.println("[CLIENT] Nessuna risposta dal server.");
@@ -40,7 +40,7 @@ public class Client {
 
             System.out.println("[CLIENT] JSON ricevuto: " + responseLine);
 
-            // Parsing risposta
+            // parsing della risposta
             JsonObject receivedJson = JsonParser.parseString(responseLine).getAsJsonObject();
             System.out.println("[CLIENT] nome: " + receivedJson.get("nome").getAsString());
             System.out.println("[CLIENT] cognome: " + receivedJson.get("cognome").getAsString());
